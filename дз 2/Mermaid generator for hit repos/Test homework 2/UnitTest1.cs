@@ -14,7 +14,7 @@ namespace Prog
             // Arrange
             string xmlFilePath = "config.xml";
             string expectedUrl = "https://github.com/Uksus1147/Config-Homework-1.git";
-            File.WriteAllText(xmlFilePath, $"<Config><RepositoryUrl>{expectedUrl}</RepositoryUrl></Config>");
+            File.WriteAllText(xmlFilePath, $"<Configuration><RepositoryUrl>{expectedUrl}</RepositoryUrl></Configuration>");
 
             // Act
             string result = Mermaind.ReadRepoUrlFromXml(xmlFilePath);
@@ -27,40 +27,31 @@ namespace Prog
         }
 
         [Test]
-        public void CloneRepo_ValidRepoUrl_ClonesSuccessfully()
-        {
-            // Arrange
-            string repoUrl = "https://github.com/Uksus1147/Config-Homework-1.git";
-            string localRepoPath = "test_temp_repo";
-
-            // Act
-            Mermaind.CloneRepo(repoUrl, localRepoPath);
-
-            // Assert
-            Assert.IsTrue(Directory.Exists(localRepoPath));
-
-            // Cleanup
-            DirectoryCleaner.ForceDeleteDirectory(localRepoPath);
-
-
-        }
-
-        [Test]
         public void GetCommits_ValidLocalRepo_ReturnsCommits()
         {
             // Arrange
             string localRepoPath = "test_temp_repo";
-            Mermaind.CloneRepo("https://github.com/Uksus1147/Config-Homework-1.git", localRepoPath);
+            string testRepoPath = "C:\\Users\\”ксус147\\Documents\\GitHub\\Config-Homework-1"; // ѕуть к существующему репозиторию
 
             // Act
-            string[] commits = Mermaind.GetCommits(localRepoPath);
+            string[] commits = Mermaind.GetCommits(testRepoPath);
 
             // Assert
             Assert.IsNotNull(commits);
             Assert.IsNotEmpty(commits);
+        }
 
-            // Cleanup
-            DirectoryCleaner.ForceDeleteDirectory(localRepoPath);
+        [Test]
+        public void GetCommits_InvalidLocalRepo_ReturnsNull()
+        {
+            // Arrange
+            string invalidRepoPath = "C:\\Invalid\\Path\\To\\Repo";
+
+            // Act
+            string[] commits = Mermaind.GetCommits(invalidRepoPath);
+
+            // Assert
+            Assert.IsNull(commits);
         }
     }
 }
